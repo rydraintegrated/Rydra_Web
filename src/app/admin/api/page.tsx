@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import AdminLayout from '@/components/admin/AdminLayout';
-import { adminApi } from '@/lib/api';
+import { adminApi, API_BASE } from '@/lib/api';
 import {
   Code,
   Key,
@@ -92,7 +92,7 @@ export default function ApiKeysPage() {
     setTesting(true);
     setTestResponse(null);
     try {
-      const res = await fetch(`http://localhost:5000/api${endpoint}`, {
+      const res = await fetch(`${API_BASE}${endpoint}`, {
         headers: {
           'Content-Type': 'application/json',
           Authorization: 'Bearer jwt_mock_token_usr_superadmin_SUPER_ADMIN',
@@ -425,7 +425,7 @@ export default function ApiKeysPage() {
                 <div className="flex items-center justify-between border-b border-slate-800 pb-3">
                   <div>
                     <h3 className="text-sm font-bold text-slate-100">Test API Endpoint</h3>
-                    <p className="font-mono text-xs text-[#10b982] mt-0.5">GET http://localhost:5000/api{selectedEndpoint}</p>
+                    <p className="font-mono text-xs text-[#10b982] mt-0.5">GET {API_BASE}{selectedEndpoint}</p>
                   </div>
                   <button
                     onClick={() => handleTestEndpoint(selectedEndpoint)}
@@ -449,7 +449,7 @@ export default function ApiKeysPage() {
               </div>
 
               <div className="text-[10px] text-slate-500 pt-2 border-t border-slate-800 flex items-center justify-between">
-                <span>Base URL: http://localhost:5000/api</span>
+                <span>Base URL: {API_BASE}</span>
                 <span>Auth: Bearer JWT Token</span>
               </div>
             </div>
