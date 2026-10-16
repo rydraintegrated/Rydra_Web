@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import React from 'react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import React from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import {
   LayoutDashboard,
   Users,
@@ -19,23 +19,27 @@ import {
   Activity,
   UserCheck,
   Code,
-} from 'lucide-react';
+} from "lucide-react";
 
 const navItems = [
-  { label: 'Overview', href: '/admin', icon: LayoutDashboard },
-  { label: 'User Accounts', href: '/admin/users', icon: Users },
-  { label: 'Drivers & Fleet', href: '/admin/drivers', icon: Car },
-  { label: 'Rides & Trips', href: '/admin/rides', icon: MapPin },
-  { label: 'Wallet Ledger', href: '/admin/wallet', icon: Wallet },
-  { label: 'System Audit Logs', href: '/admin/audit-logs', icon: ShieldCheck },
-  { label: 'Safety & SOS Desk', href: '/admin/safety', icon: AlertTriangle },
-  { label: 'Support Center', href: '/admin/support', icon: HelpCircle },
-  { label: 'Pricing & Rules', href: '/admin/settings', icon: Settings },
-  { label: 'Promotions', href: '/admin/promotions', icon: Tag },
-  { label: 'API & Keys', href: '/admin/api', icon: Code },
+  { label: "Overview", href: "/admin", icon: LayoutDashboard },
+  { label: "User Accounts", href: "/admin/users", icon: Users },
+  { label: "Drivers & Fleet", href: "/admin/drivers", icon: Car },
+  { label: "Rides & Trips", href: "/admin/rides", icon: MapPin },
+  { label: "Wallet Ledger", href: "/admin/wallet", icon: Wallet },
+  { label: "System Audit Logs", href: "/admin/audit-logs", icon: ShieldCheck },
+  { label: "Safety & SOS Desk", href: "/admin/safety", icon: AlertTriangle },
+  { label: "Support Center", href: "/admin/support", icon: HelpCircle },
+  { label: "Pricing & Rules", href: "/admin/settings", icon: Settings },
+  { label: "Promotions", href: "/admin/promotions", icon: Tag },
+  { label: "API & Keys", href: "/admin/api", icon: Code },
 ];
 
-export default function AdminLayout({ children }: { children: React.ReactNode }) {
+export default function AdminLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const pathname = usePathname();
 
   return (
@@ -49,7 +53,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               R
             </div>
             <div>
-              <h1 className="font-black text-lg tracking-wide text-slate-100">HisRider</h1>
+              <h1 className="font-black text-lg tracking-wide text-slate-100">
+                rydra
+              </h1>
               <div className="flex items-center gap-1.5">
                 <span className="w-2 h-2 rounded-full bg-[#10b982] animate-pulse"></span>
                 <span className="text-[11px] uppercase font-semibold tracking-wider text-[#10b982]">
@@ -70,11 +76,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                   href={item.href}
                   className={`flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-xs font-medium transition-all ${
                     isActive
-                      ? 'bg-[#10b982] text-slate-950 font-semibold shadow-md shadow-[#10b982]/20'
-                      : 'text-slate-400 hover:text-slate-100 hover:bg-slate-800/60'
+                      ? "bg-[#10b982] text-slate-950 font-semibold shadow-md shadow-[#10b982]/20"
+                      : "text-slate-400 hover:text-slate-100 hover:bg-slate-800/60"
                   }`}
                 >
-                  <Icon size={18} className={isActive ? 'text-slate-950' : 'text-slate-400'} />
+                  <Icon
+                    size={18}
+                    className={isActive ? "text-slate-950" : "text-slate-400"}
+                  />
                   {item.label}
                 </Link>
               );
@@ -89,8 +98,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               SA
             </div>
             <div className="text-xs">
-              <p className="font-semibold text-slate-200">HisRider Admin</p>
-              <p className="text-[10px] text-slate-400">admin@hisrider.com</p>
+              <p className="font-semibold text-slate-200">rydra Admin</p>
+              <p className="text-[10px] text-slate-400">admin@rydra.com</p>
             </div>
           </div>
           <UserCheck size={16} className="text-[#10b982]" />
@@ -102,7 +111,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         {/* Topbar */}
         <header className="h-16 bg-[#1e293b]/80 backdrop-blur border-b border-slate-800 px-6 flex items-center justify-between shrink-0">
           <div className="relative w-80">
-            <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
+            <Search
+              size={16}
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"
+            />
             <input
               type="text"
               placeholder="Search users, rides, transactions..."
@@ -126,7 +138,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </header>
 
         {/* Content Body */}
-        <main className="flex-1 overflow-y-auto p-6 bg-[#0f172a]">{children}</main>
+        <main className="flex-1 overflow-y-auto p-6 bg-[#0f172a]">
+          {children}
+        </main>
       </div>
     </div>
   );
