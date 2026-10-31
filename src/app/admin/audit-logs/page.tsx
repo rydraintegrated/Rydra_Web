@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import AdminLayout from '@/components/admin/AdminLayout';
+import Modal from '@/components/ui/Modal';
 import { adminApi } from '@/lib/api';
 import { ShieldCheck, Search, Filter, Eye, Clock, UserCheck } from 'lucide-react';
 
@@ -43,128 +44,141 @@ export default function AuditLogsPage() {
 
         {/* Search */}
         <div className="bg-[#1e293b] border border-slate-800 rounded-xl p-4 flex items-center justify-between">
-          <div className="relative flex-1 max-w-md">
-            <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+          <div className="flex items-center gap-3 bg-slate-900 border border-slate-700/80 rounded-lg px-3 py-2 w-72">
+            <Search size={16} className="text-slate-400" />
             <input
               type="text"
-              placeholder="Search by actor, action, or entity..."
+              placeholder="Search actions or entities..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full bg-slate-900 border border-slate-700/80 rounded-lg pl-9 pr-4 py-2 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-[#10b982]"
+              className="bg-transparent text-xs text-slate-100 placeholder-slate-500 focus:outline-none w-full"
             />
           </div>
         </div>
 
-        {/* Audit Log Table */}
+        {/* Table */}
         <div className="bg-[#1e293b] border border-slate-800 rounded-xl overflow-hidden shadow-sm">
-          {loading ? (
-            <div className="flex items-center justify-center p-12">
-              <div className="w-8 h-8 border-2 border-[#10b982] border-t-transparent rounded-full animate-spin"></div>
-            </div>
-          ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs border-collapse">
-                <thead>
-                  <tr className="bg-slate-900/80 border-b border-slate-800 text-slate-400 font-semibold uppercase text-[10px]">
-                    <th className="px-4 py-3.5">Timestamp</th>
-                    <th className="px-4 py-3.5">Actor</th>
-                    <th className="px-4 py-3.5">Action</th>
-                    <th className="px-4 py-3.5">Target Entity</th>
-                    <th className="px-4 py-3.5">IP Address</th>
-                    <th className="px-4 py-3.5 text-right">Details</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-800/60">
-                  {logs.map((log) => (
-                    <tr key={log.id} className="hover:bg-slate-800/40 transition-colors">
-                      <td className="px-4 py-3.5 text-slate-400 text-[11px] font-mono">
-                        {new Date(log.timestamp).toLocaleString()}
-                      </td>
-                      <td className="px-4 py-3.5 font-medium text-slate-200">
-                        <p className="font-semibold text-slate-100">{log.actorName}</p>
-                        <p className="text-[10px] text-[#10b982] font-semibold">{log.actorRole}</p>
-                      </td>
-                      <td className="px-4 py-3.5">
-                        <span className="px-2.5 py-1 rounded text-[10px] font-mono font-bold bg-slate-900 text-[#10b982] border border-[#10b982]/20">
-                          {log.action}
+          <table className="w-full text-left text-xs">
+            <thead className="bg-slate-900/60 border-b border-slate-800 text-slate-400 font-bold uppercase text-[10px]">
+              <tr>
+                <th className="p-4">Timestamp</th>
+                <th className="p-4">Actor</th>
+                <th className="p-4">Action</th>
+                <th className="p-4">Target Entity</th>
+                <th className="p-4">Client IP</th>
+                <th className="p-4 text-right">Details</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-800/60 text-slate-300">
+              {loading ? (
+                <tr>
+                  <td colSpan={6} className="text-center py-8 text-slate-500">
+                    Loading audit trail...
+                  </td>
+                </tr>
+              ) : logs.length === 0 ? (
+                <tr>
+                  <td colSpan={6} className="text-center py-8 text-slate-500">
+                    No audit records logged yet.
+                  </td>
+                </tr>
+              ) : (
+                logs.map((log) => (
+                  <tr key={log.id} className="hover:bg-slate-800/40">
+                    <td className="p-4 font-mono text-[11px] text-slate-400">
+                      {new Date(log.createdAt).toLocaleString()}
+                    </td>
+                    <td className="p-4">
+                      <div className="flex items-center gap-2">
+                        <UserCheck size={14} className="text-[#10b982]" />
+                        <span className="font-semibold text-slate-200">{log.actorName || 'System'}</span>
+                        <span className="text-[10px] text-slate-400 bg-slate-800 px-1.5 py-0.5 rounded">
+                          {log.actorRole}
                         </span>
-                      </td>
-                      <td className="px-4 py-3.5 text-slate-300">
-                        <span className="font-semibold text-slate-200">{log.entity}</span> ({log.entityId})
-                      </td>
-                      <td className="px-4 py-3.5 text-slate-400 font-mono text-[11px]">{log.ipAddress || '127.0.0.1'}</td>
-                      <td className="px-4 py-3.5 text-right">
-                        <button
-                          onClick={() => setSelectedLog(log)}
-                          className="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 text-[11px] font-semibold flex items-center gap-1 ml-auto"
-                        >
-                          <Eye size={12} /> Inspect
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
+                      </div>
+                    </td>
+                    <td className="p-4">
+                      <span className="font-mono font-bold text-[#10b982] bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
+                        {log.action}
+                      </span>
+                    </td>
+                    <td className="p-4 font-mono text-[11px]">
+                      {log.entity} #{log.entityId}
+                    </td>
+                    <td className="p-4 font-mono text-[11px] text-slate-400">{log.ipAddress || '127.0.0.1'}</td>
+                    <td className="p-4 text-right">
+                      <button
+                        onClick={() => setSelectedLog(log)}
+                        className="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white font-semibold text-[11px]"
+                      >
+                        <Eye size={12} /> Inspect
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
         </div>
 
-        {/* Audit Log Inspection Modal */}
-        {selectedLog && (
-          <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-            <div className="bg-[#1e293b] border border-slate-700 rounded-xl p-6 max-w-lg w-full space-y-4 shadow-2xl">
-              <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-                <h3 className="text-base font-bold text-slate-100 flex items-center gap-2">
-                  <ShieldCheck size={18} className="text-[#10b982]" /> Audit Inspection
-                </h3>
-                <button
-                  onClick={() => setSelectedLog(null)}
-                  className="text-slate-400 hover:text-slate-100 font-bold"
-                >
-                  ✕
-                </button>
-              </div>
-
-              <div className="space-y-3 text-xs">
+        {/* Custom Rydra Audit Log Inspection Modal */}
+        <Modal
+          isOpen={selectedLog !== null}
+          onClose={() => setSelectedLog(null)}
+          title="Audit Trail Inspection"
+          description={selectedLog ? `Entity #${selectedLog.entityId} (${selectedLog.entity})` : undefined}
+          icon={<ShieldCheck size={20} className="text-[#10b982]" />}
+          maxWidth="lg"
+          footer={
+            <button
+              onClick={() => setSelectedLog(null)}
+              className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-bold text-slate-200 transition-colors"
+            >
+              Close
+            </button>
+          }
+        >
+          {selectedLog && (
+            <div className="space-y-4 text-xs">
+              <div className="grid grid-cols-2 gap-3 p-3 bg-slate-900/50 rounded-xl border border-slate-800">
                 <div>
-                  <p className="text-slate-400">Action Name:</p>
+                  <p className="text-slate-400 text-[11px]">Action</p>
                   <p className="font-mono text-sm font-extrabold text-[#10b982]">{selectedLog.action}</p>
                 </div>
                 <div>
-                  <p className="text-slate-400">Actor Account:</p>
+                  <p className="text-slate-400 text-[11px]">Timestamp</p>
+                  <p className="font-mono text-xs text-slate-200">{new Date(selectedLog.createdAt).toLocaleString()}</p>
+                </div>
+                <div className="col-span-2">
+                  <p className="text-slate-400 text-[11px]">Actor</p>
                   <p className="font-semibold text-slate-200">
-                    {selectedLog.actorName} ({selectedLog.actorRole}) - {selectedLog.actorId}
+                    {selectedLog.actorName} ({selectedLog.actorRole}) - <span className="font-mono text-slate-400">{selectedLog.actorId}</span>
                   </p>
                 </div>
+              </div>
 
-                <div className="grid grid-cols-2 gap-3 pt-2">
-                  <div className="p-3 rounded-lg bg-rose-500/10 border border-rose-500/20">
-                    <p className="text-[10px] font-bold uppercase text-rose-400 mb-1">Previous State</p>
-                    <pre className="text-[11px] font-mono text-rose-200 whitespace-pre-wrap">
-                      {JSON.stringify(selectedLog.previousValue || 'None', null, 2)}
-                    </pre>
-                  </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/20">
+                  <p className="text-[10px] font-bold uppercase text-rose-400 mb-1.5 flex items-center gap-1">
+                    Previous State
+                  </p>
+                  <pre className="text-[11px] font-mono text-rose-200 whitespace-pre-wrap max-h-48 overflow-y-auto">
+                    {JSON.stringify(selectedLog.previousValue || 'None', null, 2)}
+                  </pre>
+                </div>
 
-                  <div className="p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
-                    <p className="text-[10px] font-bold uppercase text-emerald-400 mb-1">New State</p>
-                    <pre className="text-[11px] font-mono text-emerald-200 whitespace-pre-wrap">
-                      {JSON.stringify(selectedLog.newValue || 'None', null, 2)}
-                    </pre>
-                  </div>
+                <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
+                  <p className="text-[10px] font-bold uppercase text-emerald-400 mb-1.5 flex items-center gap-1">
+                    New State
+                  </p>
+                  <pre className="text-[11px] font-mono text-emerald-200 whitespace-pre-wrap max-h-48 overflow-y-auto">
+                    {JSON.stringify(selectedLog.newValue || 'None', null, 2)}
+                  </pre>
                 </div>
               </div>
-
-              <div className="pt-2 text-right">
-                <button
-                  onClick={() => setSelectedLog(null)}
-                  className="px-4 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-200"
-                >
-                  Close
-                </button>
-              </div>
             </div>
-          </div>
-        )}
+          )}
+        </Modal>
       </div>
     </AdminLayout>
   );

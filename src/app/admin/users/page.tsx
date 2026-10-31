@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import AdminLayout from "@/components/admin/AdminLayout";
+import { useModal } from "@/context/ModalContext";
 import { adminApi } from "@/lib/api";
 import {
   Users,
@@ -14,6 +15,7 @@ import {
 } from "lucide-react";
 
 export default function UsersManagementPage() {
+  const { confirm } = useModal();
   const [users, setUsers] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
@@ -38,10 +40,21 @@ export default function UsersManagementPage() {
     loadUsers();
   }, [search, roleFilter, statusFilter]);
 
-  const handleToggleStatus = (userId: string, currentStatus: string) => {
-    const newStatus = currentStatus === "ACTIVE" ? "SUSPENDED" : "ACTIVE";
-    adminApi.updateUserStatus(userId, newStatus).then(() => {
-      loadUsers();
+  const handleToggleStatus = (user: any) => {
+    const isSuspending = user.status === "ACTIVE";
+    const newStatus = isSuspending ? "SUSPENDED" : "ACTIVE";
+
+    confirm({
+      title: isSuspending ? `Suspend ${user.name}?` : `Reactivate ${user.name}?`,
+      message: isSuspending
+        ? `This will immediately block ${user.name} (${user.phone}) from logging in, booking rides, or accessing Rydra services.`
+        : `This will restore platform access and permissions for ${user.name} (${user.phone}).`,
+      type: isSuspending ? "danger" : "warning",
+      confirmText: isSuspending ? "Yes, Suspend Account" : "Yes, Reactivate",
+      onConfirm: async () => {
+        await adminApi.updateUserStatus(user.id, newStatus);
+        loadUsers();
+      },
     });
   };
 
@@ -173,9 +186,7 @@ export default function UsersManagementPage() {
                       <td className="px-4 py-3.5 text-right">
                         {user.role !== "SUPER_ADMIN" && (
                           <button
-                            onClick={() =>
-                              handleToggleStatus(user.id, user.status)
-                            }
+                            onClick={() => handleToggleStatus(user)}
                             className={`px-3 py-1 rounded text-[11px] font-semibold transition-colors ${
                               user.status === "ACTIVE"
                                 ? "bg-rose-500/10 text-rose-400 hover:bg-rose-500/20 border border-rose-500/30"

@@ -2,10 +2,12 @@
 
 import React, { useEffect, useState } from 'react';
 import AdminLayout from '@/components/admin/AdminLayout';
+import { useModal } from '@/context/ModalContext';
 import { adminApi } from '@/lib/api';
 import { HelpCircle, CheckCircle, MessageSquare } from 'lucide-react';
 
 export default function SupportCenterPage() {
+  const { confirm } = useModal();
   const [cases, setCases] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -27,9 +29,16 @@ export default function SupportCenterPage() {
     loadCases();
   }, []);
 
-  const handleResolveCase = (caseId: string) => {
-    adminApi.updateSupportCase(caseId, 'RESOLVED', 'Issue investigated and resolved by support agent').then(() => {
-      loadCases();
+  const handleResolveCase = (cs: any) => {
+    confirm({
+      title: 'Resolve Support Ticket?',
+      message: `Are you sure you want to resolve case #${cs.id} ("${cs.subject}") for customer ${cs.userName}?`,
+      type: 'confirm',
+      confirmText: 'Yes, Mark Resolved',
+      onConfirm: async () => {
+        await adminApi.updateSupportCase(cs.id, 'RESOLVED', 'Issue investigated and resolved by support agent');
+        loadCases();
+      },
     });
   };
 
@@ -72,7 +81,7 @@ export default function SupportCenterPage() {
                   <div>
                     {cs.status === 'OPEN' ? (
                       <button
-                        onClick={() => handleResolveCase(cs.id)}
+                        onClick={() => handleResolveCase(cs)}
                         className="px-3 py-1 rounded bg-[#10b982] text-slate-950 text-xs font-bold hover:bg-emerald-400"
                       >
                         Mark Resolved

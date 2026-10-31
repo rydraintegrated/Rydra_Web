@@ -2,10 +2,12 @@
 
 import React, { useEffect, useState } from 'react';
 import AdminLayout from '@/components/admin/AdminLayout';
+import { useModal } from '@/context/ModalContext';
 import { adminApi } from '@/lib/api';
 import { AlertTriangle, ShieldCheck, MapPin, CheckCircle } from 'lucide-react';
 
 export default function SafetyDeskPage() {
+  const { confirm } = useModal();
   const [alerts, setAlerts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -27,9 +29,16 @@ export default function SafetyDeskPage() {
     loadAlerts();
   }, []);
 
-  const handleResolveAlert = (alertId: string) => {
-    adminApi.updateSafetyAlert(alertId, 'RESOLVED', 'Resolved by Super Admin Safety Desk').then(() => {
-      loadAlerts();
+  const handleResolveAlert = (alert: any) => {
+    confirm({
+      title: 'Resolve Safety Incident?',
+      message: `Are you sure you want to resolve the ${alert.type} alert for ${alert.userName}? Confirm that the customer and emergency contacts have been reached safely.`,
+      type: 'warning',
+      confirmText: 'Yes, Resolve Alert',
+      onConfirm: async () => {
+        await adminApi.updateSafetyAlert(alert.id, 'RESOLVED', 'Resolved by Super Admin Safety Desk');
+        loadAlerts();
+      },
     });
   };
 
@@ -75,7 +84,7 @@ export default function SafetyDeskPage() {
                   <div>
                     {alert.status === 'ACTIVE' ? (
                       <button
-                        onClick={() => handleResolveAlert(alert.id)}
+                        onClick={() => handleResolveAlert(alert)}
                         className="px-3 py-1 rounded-lg bg-[#10b982] text-slate-950 text-xs font-bold shadow hover:bg-emerald-400 transition-colors"
                       >
                         Resolve SOS Alert
