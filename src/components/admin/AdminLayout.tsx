@@ -66,7 +66,7 @@ export default function AdminLayout({
           </div>
 
           {/* Navigation Links */}
-          <nav className="p-3 space-y-1 overflow-y-auto max-h-[calc(100vh-140px)]">
+          <nav className="p-3 space-y-1 overflow-y-auto max-h-[calc(100vh-190px)]">
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = pathname === item.href;
@@ -89,6 +89,21 @@ export default function AdminLayout({
               );
             })}
           </nav>
+        </div>
+
+        {/* Legal & Policy Compliance Links */}
+        <div className="px-4 py-2 border-t border-slate-800/60 flex items-center justify-between text-[11px] text-slate-400">
+          <Link href="/terms" className="hover:text-[#10b982] transition-colors">
+            Terms
+          </Link>
+          <span className="text-slate-600">•</span>
+          <Link href="/privacy" className="hover:text-[#10b982] transition-colors">
+            Privacy
+          </Link>
+          <span className="text-slate-600">•</span>
+          <Link href="/refund" className="hover:text-[#10b982] transition-colors">
+            Refunds
+          </Link>
         </div>
 
         {/* User Profile Footer */}
