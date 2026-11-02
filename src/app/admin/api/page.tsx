@@ -20,14 +20,14 @@ import {
 
 export default function ApiKeysPage() {
   const [apiKeys, setApiKeys] = useState<any>({
-    paystackSecretKey: 'sk_live_98234789234789237489',
-    paystackPublicKey: 'pk_live_19283749283749283749',
-    googleMapsApiKey: 'AIzaSyA8923748923748923749823',
-    smsApiKey: 'termii_sec_9283749823749823',
-    jwtSecret: 'rydra_super_secret_jwt_key_2026',
-    webhookUrl: 'https://api.rydra.ng/v1/webhooks',
+    paystackSecretKey: '',
+    paystackPublicKey: '',
+    googleMapsApiKey: '',
+    smsApiKey: '',
+    jwtSecret: '',
+    webhookUrl: '',
     rateLimitPerMin: 120,
-    developerApiKey: 'rydra_live_sec_892374892374892374',
+    developerApiKey: '',
   });
 
   const [loading, setLoading] = useState(true);
