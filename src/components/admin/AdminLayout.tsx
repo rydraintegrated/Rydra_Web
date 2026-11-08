@@ -19,7 +19,10 @@ import {
   Activity,
   UserCheck,
   Code,
+  LogOut,
 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { RydraLogo } from "@/components/RydraLogo";
 
 const navItems = [
   { label: "Overview", href: "/admin", icon: LayoutDashboard },
@@ -41,6 +44,15 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+  const router = useRouter();
+
+  const handleLogout = () => {
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("rydra_admin_token");
+      localStorage.removeItem("rydra_admin_user");
+    }
+    router.push("/admin/login");
+  };
 
   return (
     <div className="flex h-screen bg-[#0f172a] text-slate-100 overflow-hidden font-sans">
@@ -48,20 +60,10 @@ export default function AdminLayout({
       <aside className="w-64 bg-[#1e293b] border-r border-slate-800 flex flex-col justify-between shrink-0">
         <div>
           {/* Brand Header */}
-          <div className="p-5 border-b border-slate-800 flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-[#10b982] text-slate-950 flex items-center justify-center font-bold text-xl shadow-lg shadow-[#10b982]/20">
-              R
-            </div>
-            <div>
-              <h1 className="font-black text-lg tracking-wide text-slate-100">
-                rydra
-              </h1>
-              <div className="flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-[#10b982] animate-pulse"></span>
-                <span className="text-[11px] uppercase font-semibold tracking-wider text-[#10b982]">
-                  Super Admin
-                </span>
-              </div>
+          <div className="p-5 border-b border-slate-800">
+            <div className="flex items-center justify-between mb-2">
+              <RydraLogo size="md" variant="dark" full={true} />
+              <div className="w-2 h-2 rounded-full bg-[#10b982] animate-pulse"></div>
             </div>
           </div>
 
@@ -106,7 +108,7 @@ export default function AdminLayout({
           </Link>
         </div>
 
-        {/* User Profile Footer */}
+        {/* User Profile Footer & Logout */}
         <div className="p-4 border-t border-slate-800 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center text-xs font-semibold text-[#10b982]">
@@ -117,7 +119,13 @@ export default function AdminLayout({
               <p className="text-[10px] text-slate-400">admin@rydra.com</p>
             </div>
           </div>
-          <UserCheck size={16} className="text-[#10b982]" />
+          <button
+            onClick={handleLogout}
+            title="Log out of Admin Console"
+            className="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-slate-800 transition-colors"
+          >
+            <LogOut size={16} />
+          </button>
         </div>
       </aside>
 

@@ -12,6 +12,7 @@ import {
   ShieldAlert,
   CheckCircle2,
   UserX,
+  Trash2,
 } from "lucide-react";
 
 export default function UsersManagementPage() {
@@ -39,6 +40,23 @@ export default function UsersManagementPage() {
   useEffect(() => {
     loadUsers();
   }, [search, roleFilter, statusFilter]);
+
+  const handleDeleteUser = (user: any) => {
+    confirm({
+      title: `Permanently Delete ${user.name}?`,
+      message: `Are you sure you want to delete ${user.name} (${user.phone})? This will permanently remove their user record, credentials, and associated driver or rider profiles from the system. This action cannot be undone.`,
+      type: "danger",
+      confirmText: "Yes, Delete User",
+      onConfirm: async () => {
+        try {
+          await adminApi.deleteUser(user.id);
+          loadUsers();
+        } catch (err: any) {
+          alert(err?.message || "Failed to delete user");
+        }
+      },
+    });
+  };
 
   const handleToggleStatus = (user: any) => {
     const isSuspending = user.status === "ACTIVE";
@@ -185,18 +203,28 @@ export default function UsersManagementPage() {
                       </td>
                       <td className="px-4 py-3.5 text-right">
                         {user.role !== "SUPER_ADMIN" && (
-                          <button
-                            onClick={() => handleToggleStatus(user)}
-                            className={`px-3 py-1 rounded text-[11px] font-semibold transition-colors ${
-                              user.status === "ACTIVE"
-                                ? "bg-rose-500/10 text-rose-400 hover:bg-rose-500/20 border border-rose-500/30"
-                                : "bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 border border-emerald-500/30"
-                            }`}
-                          >
-                            {user.status === "ACTIVE"
-                              ? "Suspend"
-                              : "Reactivate"}
-                          </button>
+                          <div className="flex items-center justify-end gap-2">
+                            <button
+                              onClick={() => handleToggleStatus(user)}
+                              className={`px-3 py-1 rounded text-[11px] font-semibold transition-colors ${
+                                user.status === "ACTIVE"
+                                  ? "bg-amber-500/10 text-amber-400 hover:bg-amber-500/20 border border-amber-500/30"
+                                  : "bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 border border-emerald-500/30"
+                              }`}
+                            >
+                              {user.status === "ACTIVE"
+                                ? "Suspend"
+                                : "Reactivate"}
+                            </button>
+
+                            <button
+                              onClick={() => handleDeleteUser(user)}
+                              title="Delete user"
+                              className="p-1.5 rounded text-rose-400 hover:text-rose-300 hover:bg-rose-500/20 border border-rose-500/30 transition-colors"
+                            >
+                              <Trash2 size={13} />
+                            </button>
+                          </div>
                         )}
                       </td>
                     </tr>

@@ -6,10 +6,18 @@ export const API_BASE =
 
 async function fetcher<T>(endpoint: string, options?: RequestInit): Promise<T> {
   try {
+    let authHeader = 'Bearer jwt_mock_token_usr_superadmin_SUPER_ADMIN';
+    if (typeof window !== 'undefined') {
+      const storedToken = localStorage.getItem('rydra_admin_token');
+      if (storedToken) {
+        authHeader = `Bearer ${storedToken}`;
+      }
+    }
+
     const res = await fetch(`${API_BASE}${endpoint}`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: 'Bearer jwt_mock_token_usr_superadmin_SUPER_ADMIN',
+        Authorization: authHeader,
       },
       ...options,
       cache: 'no-store',
@@ -33,10 +41,19 @@ export const adminApi = {
     const q = new URLSearchParams(params as any).toString();
     return fetcher<{ users: any[] }>(`/admin/users?${q}`);
   },
+  login: (email: string, password: string) =>
+    fetcher<{ message: string; token: string; user: any }>('/admin/login', {
+      method: 'POST',
+      body: JSON.stringify({ email, password }),
+    }),
   updateUserStatus: (id: string, status: string) =>
     fetcher<{ user: any }>(`/admin/users/${id}/status`, {
       method: 'PATCH',
       body: JSON.stringify({ status }),
+    }),
+  deleteUser: (id: string) =>
+    fetcher<{ success: boolean; message: string }>(`/admin/users/${id}`, {
+      method: 'DELETE',
     }),
   getDrivers: (params?: { status?: string; category?: string }) => {
     const q = new URLSearchParams(params as any).toString();

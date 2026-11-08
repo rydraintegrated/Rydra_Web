@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import AdminLayout from "@/components/admin/AdminLayout";
+import { RydraLogo } from "@/components/RydraLogo";
 import { adminApi } from "@/lib/api";
 import {
   Users,
@@ -50,18 +51,15 @@ export default function AdminOverviewPage() {
   return (
     <AdminLayout>
       <div className="space-y-6">
-        {/* Page Title */}
-        <div className="flex items-center justify-between">
-          <div>
-            <h2 className="text-2xl font-black text-slate-100 tracking-tight">
-              Super Admin Dashboard
-            </h2>
-            <p className="text-xs font-semibold text-slate-400">
-              Real-time operational summary and platform control
-            </p>
+        {/* Page Title & Brand Hero Banner */}
+        <div className="bg-[#1e293b] border border-slate-800 rounded-2xl p-6 shadow-md flex flex-wrap items-center justify-between gap-4">
+          <div className="flex items-center gap-5">
+            <div className="p-3 bg-slate-900 border border-slate-700/60 rounded-2xl flex items-center justify-center shadow-inner">
+              <RydraLogo size="sm" variant="dark" full={false} />
+            </div>
           </div>
-          <div className="text-right">
-            <span className="text-xs font-semibold px-3 py-1 rounded-full bg-[#10b982]/10 border border-[#10b982]/30 text-[#10b982]">
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-bold px-3.5 py-1.5 rounded-full bg-[#10b982]/10 border border-[#10b982]/30 text-[#10b982] shadow-sm">
               Ekiti State Transport Zone
             </span>
           </div>
