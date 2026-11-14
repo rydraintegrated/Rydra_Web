@@ -4,35 +4,93 @@ export const API_BASE =
     ? 'https://rydra-be.onrender.com/api'
     : 'http://localhost:5002/api');
 
-async function fetcher<T>(endpoint: string, options?: RequestInit): Promise<T> {
-  try {
-    let authHeader = 'Bearer jwt_mock_token_usr_superadmin_SUPER_ADMIN';
-    if (typeof window !== 'undefined') {
-      const storedToken = localStorage.getItem('rydra_admin_token');
-      if (storedToken) {
-        authHeader = `Bearer ${storedToken}`;
-      }
-    }
+// In-Memory SWR Client Cache for Instant Admin Navigation
+interface CacheRecord<T = any> {
+  data: T;
+  timestamp: number;
+}
+const adminCache = new Map<string, CacheRecord>();
+const inFlightAdminRequests = new Map<string, Promise<any>>();
 
-    const res = await fetch(`${API_BASE}${endpoint}`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: authHeader,
-      },
-      ...options,
-      cache: 'no-store',
-    });
-
-    if (!res.ok) {
-      const errData = await res.json().catch(() => ({}));
-      throw new Error(errData.error || `HTTP error ${res.status}`);
-    }
-
-    return await res.json();
-  } catch (error: any) {
-    console.error(`API Fetch Error [${endpoint}]:`, error.message);
-    throw error;
+export function invalidateAdminCache(pattern?: string) {
+  if (!pattern) {
+    adminCache.clear();
+    return;
   }
+  for (const k of adminCache.keys()) {
+    if (k.includes(pattern)) adminCache.delete(k);
+  }
+}
+
+async function fetcher<T>(
+  endpoint: string,
+  options?: RequestInit & { ttlMs?: number; skipCache?: boolean }
+): Promise<T> {
+  const method = (options?.method || 'GET').toUpperCase();
+  const isGet = method === 'GET';
+  const cacheKey = `${method}:${endpoint}`;
+  const ttl = options?.ttlMs ?? 15000; // 15s default SWR window
+
+  // Instant SWR Hit
+  if (isGet && !options?.skipCache) {
+    const cached = adminCache.get(cacheKey);
+    if (cached && Date.now() - cached.timestamp < ttl) {
+      return cached.data as T;
+    }
+  }
+
+  // Deduplicate concurrent in-flight requests
+  if (isGet && inFlightAdminRequests.has(cacheKey)) {
+    return inFlightAdminRequests.get(cacheKey)!;
+  }
+
+  const runRequest = async () => {
+    try {
+      let authHeader = 'Bearer jwt_mock_token_usr_superadmin_SUPER_ADMIN';
+      if (typeof window !== 'undefined') {
+        const storedToken = localStorage.getItem('rydra_admin_token');
+        if (storedToken) {
+          authHeader = `Bearer ${storedToken}`;
+        }
+      }
+
+      const res = await fetch(`${API_BASE}${endpoint}`, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: authHeader,
+        },
+        ...options,
+      });
+
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({}));
+        throw new Error(errData.error || `HTTP error ${res.status}`);
+      }
+
+      const data = await res.json();
+
+      // Store in SWR cache
+      if (isGet) {
+        adminCache.set(cacheKey, { data, timestamp: Date.now() });
+      } else {
+        // Automatically invalidate related caches on mutation
+        invalidateAdminCache();
+      }
+
+      return data as T;
+    } catch (error: any) {
+      console.error(`API Fetch Error [${endpoint}]:`, error.message);
+      throw error;
+    }
+  };
+
+  const promise = runRequest();
+  if (isGet) {
+    inFlightAdminRequests.set(cacheKey, promise);
+    promise.finally(() => inFlightAdminRequests.delete(cacheKey));
+  }
+
+  return promise;
 }
 
 export const adminApi = {
