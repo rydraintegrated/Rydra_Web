@@ -2,6 +2,22 @@
 
 @theme {
   --font-sans: var(--font-manrope), system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --text-page-title: 1.75rem;
+  --text-page-title--line-height: 2.125rem;
+  --text-header-title: 1.25rem;
+  --text-header-title--line-height: 1.625rem;
+  --text-section-title: 1.125rem;
+  --text-section-title--line-height: 1.5rem;
+  --text-card-title: 1rem;
+  --text-card-title--line-height: 1.375rem;
+  --text-body: 0.9375rem;
+  --text-body--line-height: 1.375rem;
+  --text-description: 0.875rem;
+  --text-description--line-height: 1.25rem;
+  --text-caption: 0.75rem;
+  --text-caption--line-height: 1rem;
+  --text-overline: 0.6875rem;
+  --text-overline--line-height: 0.875rem;
 }
 
 :root {
@@ -10,6 +26,10 @@
   --card-bg: #1e293b;
   --brand-emerald: #10b982;
   --brand-emerald-dark: #059669;
+}
+
+body, input, button, select, textarea {
+  font-family: var(--font-manrope), system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
 }
 
 body {

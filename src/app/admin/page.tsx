@@ -57,6 +57,14 @@ export default function AdminOverviewPage() {
             <div className="p-3 bg-slate-900 border border-slate-700/60 rounded-2xl flex items-center justify-center shadow-inner">
               <RydraLogo size="sm" variant="dark" full={false} />
             </div>
+            <div>
+              <h1 className="text-xl font-extrabold text-slate-100 tracking-tight">
+                Platform Operations Overview
+              </h1>
+              <p className="text-xs text-slate-400 mt-0.5 font-medium">
+                Live telemetry, dispatch status, and financial metrics across Rydra
+              </p>
+            </div>
           </div>
           <div className="flex items-center gap-2">
             <span className="text-xs font-bold px-3.5 py-1.5 rounded-full bg-[#10b982]/10 border border-[#10b982]/30 text-[#10b982] shadow-sm">
