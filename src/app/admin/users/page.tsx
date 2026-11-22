@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import AdminLayout from "@/components/admin/AdminLayout";
 import { useModal } from "@/context/ModalContext";
 import { adminApi } from "@/lib/api";
+import { getMediaUrl } from "@/lib/mediaApi";
 import {
   Users,
   Search,
@@ -156,8 +157,17 @@ export default function UsersManagementPage() {
                       className="hover:bg-slate-800/40 transition-colors"
                     >
                       <td className="px-4 py-3.5 font-medium text-slate-100 flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-full bg-slate-700 text-[#10b982] flex items-center justify-center font-bold shrink-0">
-                          {user.name.charAt(0)}
+                        <div className="w-8 h-8 rounded-full bg-slate-700 text-[#10b982] flex items-center justify-center font-bold shrink-0 overflow-hidden border border-slate-700">
+                          {user.photoUrl ? (
+                            /* eslint-disable-next-line @next/next/no-img-element */
+                            <img
+                              src={getMediaUrl(user.photoUrl)}
+                              alt={user.name}
+                              className="w-full h-full object-cover"
+                            />
+                          ) : (
+                            user.name.charAt(0)
+                          )}
                         </div>
                         <div>
                           <p className="font-semibold text-slate-200">

@@ -5,6 +5,7 @@ import AdminLayout from '@/components/admin/AdminLayout';
 import Modal from '@/components/ui/Modal';
 import { useModal } from '@/context/ModalContext';
 import { adminApi } from '@/lib/api';
+import { getMediaUrl } from '@/lib/mediaApi';
 import {
   Car,
   ShieldAlert,
@@ -271,6 +272,33 @@ export default function DriversVerificationPage() {
                     <p className="font-mono font-semibold text-slate-200">{inspectDriver.licenseNumber}</p>
                   </div>
                 </div>
+
+                {(inspectDriver.ninDocUrl || inspectDriver.licenseDocUrl) && (
+                  <div className="pt-2 border-t border-slate-800 grid grid-cols-2 gap-3">
+                    {inspectDriver.ninDocUrl && (
+                      <div>
+                        <p className="text-[10px] text-slate-400 mb-1">NIN Slip Document</p>
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={getMediaUrl(inspectDriver.ninDocUrl)}
+                          alt="NIN Document"
+                          className="w-full h-24 object-cover rounded-lg border border-slate-700 bg-slate-950"
+                        />
+                      </div>
+                    )}
+                    {inspectDriver.licenseDocUrl && (
+                      <div>
+                        <p className="text-[10px] text-slate-400 mb-1">Driver License Document</p>
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={getMediaUrl(inspectDriver.licenseDocUrl)}
+                          alt="Driver License"
+                          className="w-full h-24 object-cover rounded-lg border border-slate-700 bg-slate-950"
+                        />
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
 
               <div className="p-4 bg-slate-900/60 rounded-xl border border-slate-800 grid grid-cols-3 gap-2 text-center">
