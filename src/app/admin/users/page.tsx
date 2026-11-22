@@ -7,9 +7,6 @@ import { adminApi } from "@/lib/api";
 import {
   Users,
   Search,
-  Filter,
-  ShieldCheck,
-  ShieldAlert,
   CheckCircle2,
   UserX,
   Trash2,

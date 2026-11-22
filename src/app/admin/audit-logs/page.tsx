@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import AdminLayout from '@/components/admin/AdminLayout';
 import Modal from '@/components/ui/Modal';
 import { adminApi } from '@/lib/api';
-import { ShieldCheck, Search, Filter, Eye, Clock, UserCheck } from 'lucide-react';
+import { ShieldCheck, Search, Eye, UserCheck } from 'lucide-react';
 
 export default function AuditLogsPage() {
   const [logs, setLogs] = useState<any[]>([]);
@@ -38,7 +38,7 @@ export default function AuditLogsPage() {
             <h2 className="text-2xl font-black text-slate-100 flex items-center gap-2 tracking-tight">
               <ShieldCheck size={22} className="text-[#10b982]" /> System Audit Log
             </h2>
-            <p className="text-xs font-semibold text-slate-400">Complete audit trail answering: "Who changed what, when, previous vs current values"</p>
+            <p className="text-xs font-semibold text-slate-400">Complete audit trail answering: &quot;Who changed what, when, previous vs current values&quot;</p>
           </div>
         </div>
 

@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import AdminLayout from '@/components/admin/AdminLayout';
 import { useModal } from '@/context/ModalContext';
 import { adminApi } from '@/lib/api';
-import { AlertTriangle, ShieldCheck, MapPin, CheckCircle } from 'lucide-react';
+import { AlertTriangle, MapPin, CheckCircle } from 'lucide-react';
 
 export default function SafetyDeskPage() {
   const { confirm } = useModal();

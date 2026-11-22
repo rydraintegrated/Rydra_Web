@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import AdminLayout from '@/components/admin/AdminLayout';
 import { useModal } from '@/context/ModalContext';
 import { adminApi } from '@/lib/api';
-import { HelpCircle, CheckCircle, MessageSquare } from 'lucide-react';
+import { HelpCircle, CheckCircle } from 'lucide-react';
 
 export default function SupportCenterPage() {
   const { confirm } = useModal();

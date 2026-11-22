@@ -7,14 +7,12 @@ import { useModal } from '@/context/ModalContext';
 import { adminApi } from '@/lib/api';
 import {
   Car,
-  ShieldCheck,
   ShieldAlert,
   CheckCircle,
   XCircle,
   Clock,
   FileCheck,
   Eye,
-  User,
   CreditCard,
 } from 'lucide-react';
 

@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import AdminLayout from '@/components/admin/AdminLayout';
 import { adminApi } from '@/lib/api';
-import { Wallet, ArrowUpRight, ArrowDownLeft, CheckCircle2, FileSpreadsheet } from 'lucide-react';
+import { Wallet, CheckCircle2 } from 'lucide-react';
 
 export default function WalletLedgerPage() {
   const [transactions, setTransactions] = useState<any[]>([]);

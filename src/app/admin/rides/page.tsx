@@ -6,8 +6,6 @@ import { adminApi } from "@/lib/api";
 import {
   MapPin,
   Navigation,
-  DollarSign,
-  Calendar,
   RefreshCw,
 } from "lucide-react";
 

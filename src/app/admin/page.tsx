@@ -12,8 +12,6 @@ import {
   ShieldAlert,
   HelpCircle,
   ArrowUpRight,
-  CheckCircle,
-  AlertCircle,
   FileText,
 } from "lucide-react";
 

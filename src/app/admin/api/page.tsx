@@ -442,7 +442,7 @@ export default function ApiKeysPage() {
                     {testResponse ? (
                       <pre>{testResponse}</pre>
                     ) : (
-                      <span className="text-slate-600 italic">Click "Send Request" to test endpoint live...</span>
+                      <span className="text-slate-600 italic">Click &quot;Send Request&quot; to test endpoint live...</span>
                     )}
                   </div>
                 </div>

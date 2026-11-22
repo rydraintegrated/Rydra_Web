@@ -7,8 +7,6 @@ import {
   Settings,
   Save,
   CheckCircle2,
-  ShieldCheck,
-  DollarSign,
 } from "lucide-react";
 
 export default function SystemSettingsPage() {

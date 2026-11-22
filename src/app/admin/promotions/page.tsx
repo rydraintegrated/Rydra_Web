@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import AdminLayout from '@/components/admin/AdminLayout';
 import { adminApi } from '@/lib/api';
-import { Tag, Plus, CheckCircle } from 'lucide-react';
+import { Tag, Plus } from 'lucide-react';
 
 export default function PromotionsPage() {
   const [promotions, setPromotions] = useState<any[]>([]);
@@ -120,25 +120,29 @@ export default function PromotionsPage() {
         </form>
 
         {/* Promo Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {promotions.map((p) => (
-            <div key={p.id} className="bg-[#1e293b] border border-slate-800 rounded-xl p-4 space-y-3">
-              <div className="flex items-center justify-between">
-                <span className="font-mono text-base font-extrabold text-[#10b982] bg-emerald-500/10 px-3 py-1 rounded border border-emerald-500/20">
-                  {p.code}
-                </span>
-                <span className="text-[10px] font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded">
-                  Active
-                </span>
+        {loading ? (
+          <div className="text-slate-400 text-xs py-8 text-center">Loading active promotions...</div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {promotions.map((p) => (
+              <div key={p.id} className="bg-[#1e293b] border border-slate-800 rounded-xl p-4 space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="font-mono text-base font-extrabold text-[#10b982] bg-emerald-500/10 px-3 py-1 rounded border border-emerald-500/20">
+                    {p.code}
+                  </span>
+                  <span className="text-[10px] font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded">
+                    Active
+                  </span>
+                </div>
+                <p className="text-xs text-slate-200 font-semibold">
+                  {p.discountType === 'PERCENT' ? `${p.value}% OFF` : `₦${p.value} OFF`}
+                  {p.maxDiscount ? ` (Up to ₦${p.maxDiscount})` : ''}
+                </p>
+                <p className="text-[11px] text-slate-400">Total Usages: {p.usageCount || 0}</p>
               </div>
-              <p className="text-xs text-slate-200 font-semibold">
-                {p.discountType === 'PERCENT' ? `${p.value}% OFF` : `₦${p.value} OFF`}
-                {p.maxDiscount ? ` (Up to ₦${p.maxDiscount})` : ''}
-              </p>
-              <p className="text-[11px] text-slate-400">Total Usages: {p.usageCount || 0}</p>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
     </AdminLayout>
   );

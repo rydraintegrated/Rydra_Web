@@ -17,7 +17,6 @@ import {
   Search,
   Bell,
   Activity,
-  UserCheck,
   Code,
   LogOut,
 } from "lucide-react";
