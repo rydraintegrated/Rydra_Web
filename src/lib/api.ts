@@ -99,6 +99,19 @@ export const adminApi = {
     const q = new URLSearchParams(params as any).toString();
     return fetcher<{ users: any[] }>(`/admin/users?${q}`);
   },
+  getUserDetails: (id: string) =>
+    fetcher<{
+      user: any;
+      driverProfile?: any;
+      wallet?: any;
+      recentRides?: any[];
+      transactions?: any[];
+    }>(`/admin/users/${id}`),
+  createUser: (data: { name: string; phone: string; email?: string; role?: string; status?: string }) =>
+    fetcher<{ user: any }>('/admin/users', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
   login: (email: string, password: string) =>
     fetcher<{ message: string; token: string; user: any }>('/admin/login', {
       method: 'POST',
@@ -108,6 +121,11 @@ export const adminApi = {
     fetcher<{ user: any }>(`/admin/users/${id}/status`, {
       method: 'PATCH',
       body: JSON.stringify({ status }),
+    }),
+  updateUserRole: (id: string, role: string) =>
+    fetcher<{ user: any }>(`/admin/users/${id}/role`, {
+      method: 'PATCH',
+      body: JSON.stringify({ role }),
     }),
   deleteUser: (id: string) =>
     fetcher<{ success: boolean; message: string }>(`/admin/users/${id}`, {
@@ -126,7 +144,17 @@ export const adminApi = {
     const q = new URLSearchParams(params as any).toString();
     return fetcher<{ rides: any[] }>(`/admin/rides?${q}`);
   },
+  cancelRide: (id: string, reason?: string) =>
+    fetcher<{ ride: any }>(`/admin/rides/${id}/cancel`, {
+      method: 'PATCH',
+      body: JSON.stringify({ reason }),
+    }),
   getWalletLedger: () => fetcher<{ transactions: any[] }>('/admin/wallet/ledger'),
+  adjustWalletBalance: (data: { userId: string; amount: number; type: 'CREDIT' | 'DEBIT'; reason?: string }) =>
+    fetcher<{ wallet: any; transaction: any }>('/admin/wallet/adjust', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
   getAuditLogs: (params?: { search?: string; action?: string; entity?: string }) => {
     const q = new URLSearchParams(params as any).toString();
     return fetcher<{ auditLogs: any[] }>(`/admin/audit-logs?${q}`);
@@ -160,6 +188,15 @@ export const adminApi = {
     fetcher<{ promotion: any }>('/admin/promotions', {
       method: 'POST',
       body: JSON.stringify(data),
+    }),
+  deletePromotion: (id: string) =>
+    fetcher<{ success: boolean; message: string }>(`/admin/promotions/${id}`, {
+      method: 'DELETE',
+    }),
+  togglePromotionStatus: (id: string, active?: boolean) =>
+    fetcher<{ promotion: any }>(`/admin/promotions/${id}/status`, {
+      method: 'PATCH',
+      body: JSON.stringify({ active }),
     }),
 };
 
